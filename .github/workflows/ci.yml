@@ -39,6 +39,6 @@ jobs:
       - name: Backend checks
         working-directory: backend
         run: |
-          python -m pip install --quiet ruff
+          python -m pip install --quiet ruff==0.14.4
           ruff check . || true
           python -m compileall -q . || true
