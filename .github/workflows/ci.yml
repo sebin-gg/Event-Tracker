@@ -24,7 +24,7 @@ jobs:
       - name: Frontend install & build
         working-directory: frontend
         run: |
-          npm install
+          npm ci
           npm run build --if-present
           npm run lint --if-present
           npm test --if-present

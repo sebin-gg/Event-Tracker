@@ -68,7 +68,7 @@ function App() {
     <div className={classNames("min-h-screen py-8 px-4 transition-colors", dark ? "bg-gray-900 text-white" : "bg-gray-50 text-gray-900")}> 
       <div className="flex justify-between items-center max-w-5xl mx-auto mb-8">
         <h1 className="text-3xl font-bold">FOCES Events</h1>
-        <button onClick={() => setDark(d => !d)} className="px-3 py-2 rounded bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-gray-200 shadow">
+        <button type="button" onClick={() => setDark(d => !d)} className="px-3 py-2 rounded bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-gray-200 shadow">
           {dark ? "Light Mode" : "Dark Mode"}
         </button>
       </div>
@@ -103,7 +103,14 @@ function App() {
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 max-w-5xl mx-auto">
         {filteredEvents.map((event, idx) => (
-          <div key={idx} className={classNames("rounded shadow p-6 flex flex-col cursor-pointer transition", dark ? "bg-gray-800 hover:bg-gray-700" : "bg-white hover:bg-gray-100")} onClick={() => setSelectedEvent(event)}>
+          <div
+            key={`${event.name}-${event.date}-${event.time}`}
+            role="button"
+            tabIndex={0}
+            className={classNames("rounded shadow p-6 flex flex-col cursor-pointer transition", dark ? "bg-gray-800 hover:bg-gray-700" : "bg-white hover:bg-gray-100")}
+            onClick={() => setSelectedEvent(event)}
+            onKeyDown={e => { if (e.key === "Enter" || e.key === " ") setSelectedEvent(event); }}
+          >
             <h3 className="text-lg font-bold mb-2">{event.name}</h3>
             <p className="mb-2 text-gray-700 dark:text-gray-300">{event.description}</p>
             <div className="flex-1" />
@@ -118,7 +125,7 @@ function App() {
       {selectedEvent && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onClick={() => setSelectedEvent(null)}>
           <div className={classNames("bg-white dark:bg-gray-900 rounded shadow-lg p-8 max-w-md w-full relative", dark ? "text-white" : "text-gray-900")} onClick={e => e.stopPropagation()}>
-            <button className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-white" onClick={() => setSelectedEvent(null)}>&times;</button>
+            <button type="button" className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-white" onClick={() => setSelectedEvent(null)}>&times;</button>
             <h2 className="text-2xl font-bold mb-4">{selectedEvent.name}</h2>
             <p className="mb-2">{selectedEvent.description}</p>
             <div className="mb-2">Date: {selectedEvent.date}</div>
