@@ -65,3 +65,19 @@ You can deploy the backend on platforms like Heroku, Render, or Railway. The fro
 ---
 
 For any issues, open an issue on the GitHub repo.
+
+---
+
+## 📐 System Architecture
+
+Decoupled full-stack architecture with strict separation between API routing, schema validation, and persistence:
+
+```mermaid
+graph LR
+    SPA[React SPA Frontend] --> API[FastAPI Gateway]
+    API --> Schema[Pydantic Validation]
+    Schema --> Service[Event Business Logic]
+    Service --> DB[(SQLite / PostgreSQL)]
+```
+
+Detailed architectural decision records (ADRs) and data flows documented in [ARCHITECTURE.md](./ARCHITECTURE.md).
