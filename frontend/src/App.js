@@ -102,14 +102,12 @@ function App() {
       {!loading && !error && filteredEvents.length === 0 && <div className="text-center text-gray-500">No events found.</div>}
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 max-w-5xl mx-auto">
-        {filteredEvents.map((event, idx) => (
-          <div
+        {filteredEvents.map((event) => (
+          <button
+            type="button"
             key={`${event.name}-${event.date}-${event.time}`}
-            role="button"
-            tabIndex={0}
-            className={classNames("rounded shadow p-6 flex flex-col cursor-pointer transition", dark ? "bg-gray-800 hover:bg-gray-700" : "bg-white hover:bg-gray-100")}
+            className={classNames("rounded shadow p-6 flex flex-col cursor-pointer transition text-left", dark ? "bg-gray-800 hover:bg-gray-700" : "bg-white hover:bg-gray-100")}
             onClick={() => setSelectedEvent(event)}
-            onKeyDown={e => { if (e.key === "Enter" || e.key === " ") setSelectedEvent(event); }}
           >
             <h3 className="text-lg font-bold mb-2">{event.name}</h3>
             <p className="mb-2 text-gray-700 dark:text-gray-300">{event.description}</p>
@@ -117,7 +115,7 @@ function App() {
             <div className="text-sm text-gray-500 dark:text-gray-400 mt-2">Date: {event.date}</div>
             <div className="text-sm text-gray-500 dark:text-gray-400">Time: {event.time}</div>
             <div className="text-sm text-gray-500 dark:text-gray-400">Organizer: {event.organizer}</div>
-          </div>
+          </button>
         ))}
       </div>
 
