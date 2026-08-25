@@ -30,7 +30,7 @@ This project is a full-stack web application for managing and displaying events.
 
 ## Folder Structure
 ```text
-focess/
+Event-Tracker/
 ├── backend/
 │   ├── main.py
 │   └── requirements.txt
@@ -38,7 +38,9 @@ focess/
     ├── src/
     ├── public/
     ├── package.json
-    └── tailwind.config.js
+    ├── postcss.config.js
+    ├── tailwind.config.js
+    └── vite.config.mjs
 ```
 
 ---
@@ -59,7 +61,7 @@ focess/
    ```
    - API available at `http://localhost:8000/events`
 
-### Frontend (React)
+### Frontend (React + Vite)
 1. Open terminal in `frontend` folder
 2. Install dependencies:
    ```pwsh
@@ -69,7 +71,7 @@ focess/
    ```pwsh
    npm start
    ```
-   - App available at `http://localhost:3000`
+   - App available at `http://localhost:5173/Event-Tracker/`
 
 ---
 
@@ -83,7 +85,7 @@ focess/
 
 ## Deployment
 - Backend: Deploy on Heroku, Render, or Railway.
-- Frontend: Deploy on Vercel or Netlify.
+- Frontend: Deployed on GitHub Pages at `https://sebin-gg.github.io/Event-Tracker/` (or Vercel / Netlify).
 
 ---
 
@@ -93,7 +95,7 @@ Sebin GG
 ---
 
 ## GitHub Repository
-https://github.com/sebin-gg/foccestask
+https://github.com/sebin-gg/Event-Tracker
 
 ---
 

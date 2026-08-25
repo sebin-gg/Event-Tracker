@@ -58,6 +58,9 @@ The frontend calls the API base URL `http://localhost:8000/events` directly, and
 
 Events are stored in memory, so data resets when the server restarts.
 
+## Live Demo
+- **GitHub Pages:** [https://sebin-gg.github.io/Event-Tracker/](https://sebin-gg.github.io/Event-Tracker/)
+
 ## Project structure
 ```
 Event-Tracker/
@@ -68,7 +71,9 @@ Event-Tracker/
     ├── src/
     ├── public/
     ├── package.json
-    └── tailwind.config.js
+    ├── postcss.config.js
+    ├── tailwind.config.js
+    └── vite.config.mjs
 ```
 
 ## How it works
@@ -76,10 +81,12 @@ Event-Tracker/
 - The frontend fetches events from the backend and displays them in cards.
 - Users can add new events using the form.
 - Search, modal, and dark mode features improve usability.
+- Works offline / in static hosting with local persistence and demo events.
 - A Workbox service worker precaches assets in production builds.
 
 ## Deployment
-You can deploy the backend on platforms like Heroku, Render, or Railway. You can deploy the frontend on Vercel or Netlify.
+- **Frontend:** Deployed automatically to GitHub Pages via GitHub Actions on push to `main`. Can also be hosted on Vercel or Netlify.
+- **Backend:** Can be deployed on platforms like Render, Railway, or Fly.io.
 
 ## Author
 - Sebin GG
