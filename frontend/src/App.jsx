@@ -44,9 +44,21 @@ function getStoredEvents() {
   return DEFAULT_EVENTS;
 }
 
+function sanitizeEvents(events) {
+  return (Array.isArray(events) ? events : [])
+    .filter((e) => e && typeof e === "object")
+    .map((e) => ({
+      name: String(e.name ?? "").slice(0, 200),
+      description: String(e.description ?? "").slice(0, 2000),
+      date: String(e.date ?? "").slice(0, 32),
+      time: String(e.time ?? "").slice(0, 32),
+      organizer: String(e.organizer ?? "").slice(0, 200),
+    }));
+}
+
 function saveStoredEvents(events) {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(events));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(sanitizeEvents(events)));
   } catch {
     // ignore
   }
@@ -62,7 +74,7 @@ function App() {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [dark, setDark] = useState(() => {
     if (typeof window !== "undefined") {
-      return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+      return window.matchMedia?.("(prefers-color-scheme: dark)").matches ?? false;
     }
     return false;
   });
@@ -200,11 +212,12 @@ function App() {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="sm:col-span-2">
-                <label className="block text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-gray-400 mb-1.5">
+                <label htmlFor="ev-name" className="block text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-gray-400 mb-1.5">
                   Event Name
                 </label>
                 <input
                   name="name"
+                  id="ev-name"
                   value={form.name}
                   onChange={handleChange}
                   required
@@ -214,11 +227,12 @@ function App() {
               </div>
 
               <div className="sm:col-span-2">
-                <label className="block text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-gray-400 mb-1.5">
+                <label htmlFor="ev-desc" className="block text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-gray-400 mb-1.5">
                   Description
                 </label>
                 <textarea
                   name="description"
+                  id="ev-desc"
                   value={form.description}
                   onChange={handleChange}
                   required
@@ -229,12 +243,13 @@ function App() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-gray-400 mb-1.5">
+                <label htmlFor="ev-date" className="block text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-gray-400 mb-1.5">
                   Date
                 </label>
                 <input
                   type="date"
                   name="date"
+                  id="ev-date"
                   value={form.date}
                   onChange={handleChange}
                   required
@@ -243,12 +258,13 @@ function App() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-gray-400 mb-1.5">
+                <label htmlFor="ev-time" className="block text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-gray-400 mb-1.5">
                   Time
                 </label>
                 <input
                   type="time"
                   name="time"
+                  id="ev-time"
                   value={form.time}
                   onChange={handleChange}
                   required
@@ -257,11 +273,12 @@ function App() {
               </div>
 
               <div className="sm:col-span-2">
-                <label className="block text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-gray-400 mb-1.5">
+                <label htmlFor="ev-org" className="block text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-gray-400 mb-1.5">
                   Organizer / Host
                 </label>
                 <input
                   name="organizer"
+                  id="ev-org"
                   value={form.organizer}
                   onChange={handleChange}
                   required
@@ -393,21 +410,18 @@ function App() {
 
         {/* Modal for event details */}
         {selectedEvent && (
-          <div
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fade-in"
-            onClick={() => setSelectedEvent(null)}
-            role="dialog"
-            aria-modal="true"
+          <dialog
+            open
+            onClose={() => setSelectedEvent(null)}
+            onClick={(e) => { if (e.target === e.currentTarget) setSelectedEvent(null); }}
             aria-labelledby="event-modal-title"
-            onKeyDown={(e) => { if (e.key === 'Escape') setSelectedEvent(null); }}
+            className="fixed inset-0 z-50 m-auto max-w-lg w-full rounded-2xl border shadow-2xl p-6 sm:p-8 relative transition-all backdrop:bg-black/60 backdrop:backdrop-blur-sm"
           >
             <div
               className={classNames(
-                "rounded-2xl border shadow-2xl p-6 sm:p-8 max-w-lg w-full relative transition-all",
-                dark ? "bg-gray-900 border-gray-800 text-white" : "bg-white border-gray-200 text-gray-900"
+                "text-left",
+                dark ? "bg-gray-900 text-white" : "bg-white text-gray-900"
               )}
-              onClick={(e) => e.stopPropagation()}
-              role="document"
             >
               <button
                 type="button"
@@ -461,7 +475,7 @@ function App() {
                 </button>
               </div>
             </div>
-          </div>
+          </dialog>
         )}
       </div>
     </div>

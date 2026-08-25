@@ -16,7 +16,6 @@ jobs:
     if: github.actor != 'dependabot[bot]'
     name: SonarQube Cloud Scan
     runs-on: ubuntu-latest
-    # TODO: remove once Automatic Analysis disabled in sonarcloud.io
     continue-on-error: true
     steps:
       - name: Harden the runner (Audit all outbound calls)
