@@ -16,6 +16,9 @@ jobs:
     if: github.actor != 'dependabot[bot]'
     name: SonarQube Cloud Scan
     runs-on: ubuntu-latest
+    # Non-blocking until "Automatic Analysis" is disabled in SonarCloud
+    # project settings - CI analysis fails while AA is enabled.
+    continue-on-error: true
     steps:
       - name: Harden the runner (Audit all outbound calls)
         uses: step-security/harden-runner@05e31511f85b41b11d1cf0ef85d0992719546e2c # v2.21.0
