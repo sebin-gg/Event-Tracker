@@ -396,6 +396,10 @@ function App() {
           <div
             className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fade-in"
             onClick={() => setSelectedEvent(null)}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="event-modal-title"
+            onKeyDown={(e) => { if (e.key === 'Escape') setSelectedEvent(null); }}
           >
             <div
               className={classNames(
@@ -403,6 +407,7 @@ function App() {
                 dark ? "bg-gray-900 border-gray-800 text-white" : "bg-white border-gray-200 text-gray-900"
               )}
               onClick={(e) => e.stopPropagation()}
+              role="document"
             >
               <button
                 type="button"
