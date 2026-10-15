@@ -9,6 +9,13 @@ updates:
     groups:
       frontend-deps:
         patterns: ["*"]
+    ignore:
+      # postcss is pinned by an overrides entry that remediates vulnerable CRA
+      # transitives. The override and the direct devDependency cannot be
+      # reconciled, so Dependabot fails the whole run with "Override for
+      # postcss@... conflicts with direct dependency" and its grouped PR does
+      # not install (npm EOVERRIDE). Renovate still proposes postcss updates.
+      - dependency-name: "postcss"
     labels:
       - "dependencies"
 
