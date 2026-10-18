@@ -360,32 +360,26 @@ function App() {
 
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {filteredEvents.map((event) => (
-              <div
+              <article
                 key={`${event.name}-${event.date}-${event.time}`}
                 className={classNames(
-                  "rounded-2xl border p-6 flex flex-col justify-between transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md cursor-pointer text-left group",
+                  "relative rounded-2xl border p-6 flex flex-col justify-between transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md cursor-pointer text-left group",
                   dark
                     ? "bg-gray-900 border-gray-800 hover:border-gray-700"
                     : "bg-white border-gray-200 hover:border-gray-300"
                 )}
-                onClick={() => setSelectedEvent(event)}
               >
-                <div>
-                  <div className="flex items-center justify-between gap-2 mb-2">
+                <button
+                  type="button"
+                  aria-label={`View details for ${event.name}`}
+                  className="absolute inset-0 z-0 rounded-2xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+                  onClick={() => setSelectedEvent(event)}
+                />
+                <div className="pointer-events-none relative z-10">
+                  <div className="mb-2 flex items-center justify-between gap-2 pr-8">
                     <span className="text-xs font-semibold uppercase tracking-wider text-blue-600 dark:text-blue-400">
                       {event.organizer || "FOCES"}
                     </span>
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleDelete(event);
-                      }}
-                      className="opacity-0 group-hover:opacity-100 text-gray-400 hover:text-red-500 transition p-1 text-xs"
-                      title="Remove event"
-                    >
-                      🗑️
-                    </button>
                   </div>
                   <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2 leading-snug">
                     {event.name}
@@ -393,89 +387,103 @@ function App() {
                   <p className="text-sm text-gray-600 dark:text-gray-300 line-clamp-3 mb-4">
                     {event.description}
                   </p>
+                  <div className="pt-4 border-t border-gray-100 dark:border-gray-800/80 flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
+                    <span className="flex items-center gap-1.5">
+                      <span aria-hidden="true">🗓️</span> {event.date}
+                    </span>
+                    <span className="flex items-center gap-1.5">
+                      <span aria-hidden="true">⏰</span> {event.time}
+                    </span>
+                  </div>
                 </div>
-
-                <div className="pt-4 border-t border-gray-100 dark:border-gray-800/80 flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
-                  <span className="flex items-center gap-1.5">
-                    <span>🗓️</span> {event.date}
-                  </span>
-                  <span className="flex items-center gap-1.5">
-                    <span>⏰</span> {event.time}
-                  </span>
-                </div>
-              </div>
+                <button
+                  type="button"
+                  onClick={() => handleDelete(event)}
+                  className="pointer-events-auto absolute right-5 top-5 z-20 p-1 text-xs text-gray-400 opacity-0 transition hover:text-red-500 group-hover:opacity-100 group-focus-within:opacity-100"
+                  title="Remove event"
+                  aria-label={`Remove ${event.name}`}
+                >
+                  🗑️
+                </button>
+              </article>
             ))}
           </div>
         </section>
 
         {/* Modal for event details */}
         {selectedEvent && (
-          <dialog
-            open
-            onClose={() => setSelectedEvent(null)}
-            onClick={(e) => { if (e.target === e.currentTarget) setSelectedEvent(null); }}
-            aria-labelledby="event-modal-title"
-            className="fixed inset-0 z-50 m-auto max-w-lg w-full rounded-2xl border shadow-2xl p-6 sm:p-8 relative transition-all backdrop:bg-black/60 backdrop:backdrop-blur-sm"
-          >
+          <>
             <div
-              className={classNames(
-                "text-left",
-                dark ? "bg-gray-900 text-white" : "bg-white text-gray-900"
-              )}
+              aria-hidden="true"
+              className="pointer-events-none fixed inset-0 z-40 bg-black/60 backdrop-blur-sm"
+            />
+            <dialog
+              open
+              onClose={() => setSelectedEvent(null)}
+              aria-labelledby="event-modal-title"
+              className="fixed inset-0 z-50 m-auto max-w-lg w-full rounded-2xl border shadow-2xl p-6 sm:p-8 relative transition-all"
             >
-              <button
-                type="button"
-                className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-white text-2xl font-bold p-1 leading-none"
-                onClick={() => setSelectedEvent(null)}
+              <div
+                className={classNames(
+                  "text-left",
+                  dark ? "bg-gray-900 text-white" : "bg-white text-gray-900"
+                )}
               >
-                &times;
-              </button>
-
-              <span className="text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400 block mb-2">
-                Event Details
-              </span>
-
-              <h2 className="text-2xl font-extrabold mb-3 leading-snug">
-                {selectedEvent.name}
-              </h2>
-
-              <p className="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
-                {selectedEvent.description}
-              </p>
-
-              <div className="space-y-2.5 p-4 rounded-xl bg-gray-50 dark:bg-gray-800/50 border border-gray-200/60 dark:border-gray-800 text-sm">
-                <div className="flex items-center gap-2">
-                  <span className="text-gray-500 dark:text-gray-400 font-medium">📅 Date:</span>
-                  <span className="font-semibold">{selectedEvent.date}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-gray-500 dark:text-gray-400 font-medium">⏰ Time:</span>
-                  <span className="font-semibold">{selectedEvent.time}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-gray-500 dark:text-gray-400 font-medium">👤 Organizer:</span>
-                  <span className="font-semibold">{selectedEvent.organizer}</span>
-                </div>
-              </div>
-
-              <div className="mt-6 flex justify-end gap-3">
                 <button
                   type="button"
-                  onClick={() => handleDelete(selectedEvent)}
-                  className="px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-lg transition"
-                >
-                  Delete Event
-                </button>
-                <button
-                  type="button"
+                  className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-white text-2xl font-bold p-1 leading-none"
                   onClick={() => setSelectedEvent(null)}
-                  className="px-5 py-2 text-sm bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-lg font-medium transition"
+                  aria-label="Close event details"
                 >
-                  Close
+                  &times;
                 </button>
+
+                <span className="text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400 block mb-2">
+                  Event Details
+                </span>
+
+                <h2 id="event-modal-title" className="text-2xl font-extrabold mb-3 leading-snug">
+                  {selectedEvent.name}
+                </h2>
+
+                <p className="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
+                  {selectedEvent.description}
+                </p>
+
+                <div className="space-y-2.5 p-4 rounded-xl bg-gray-50 dark:bg-gray-800/50 border border-gray-200/60 dark:border-gray-800 text-sm">
+                  <div className="flex items-center gap-2">
+                    <span className="text-gray-500 dark:text-gray-400 font-medium">📅 Date:</span>
+                    <span className="font-semibold">{selectedEvent.date}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-gray-500 dark:text-gray-400 font-medium">⏰ Time:</span>
+                    <span className="font-semibold">{selectedEvent.time}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-gray-500 dark:text-gray-400 font-medium">👤 Organizer:</span>
+                    <span className="font-semibold">{selectedEvent.organizer}</span>
+                  </div>
+                </div>
+
+                <div className="mt-6 flex justify-end gap-3">
+                  <button
+                    type="button"
+                    onClick={() => handleDelete(selectedEvent)}
+                    className="px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-lg transition"
+                  >
+                    Delete Event
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedEvent(null)}
+                    className="px-5 py-2 text-sm bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-lg font-medium transition"
+                  >
+                    Close
+                  </button>
+                </div>
               </div>
-            </div>
-          </dialog>
+            </dialog>
+          </>
         )}
       </div>
     </div>

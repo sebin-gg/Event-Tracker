@@ -43,6 +43,8 @@ export function register(config) {
             'This web app is being served cache-first by a service ' +
               'worker. To learn more, visit https://cra.link/PWA'
           );
+        }).catch((error) => {
+          console.error('Error waiting for the service worker:', error);
         });
       } else {
         // Is not localhost. Just register service worker
@@ -109,11 +111,9 @@ function checkValidServiceWorker(swUrl, config) {
         (contentType != null && !contentType.includes('javascript'))
       ) {
         // No service worker found. Probably a different app. Reload the page.
-        navigator.serviceWorker.ready.then((registration) => {
-          registration.unregister().then(() => {
-            window.location.reload();
-          });
-        });
+        return navigator.serviceWorker.ready
+          .then((registration) => registration.unregister())
+          .then(() => window.location.reload());
       } else {
         // Service worker found. Proceed as normal.
         registerValidSW(swUrl, config);
@@ -128,7 +128,7 @@ export function unregister() {
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.ready
       .then((registration) => {
-        registration.unregister();
+        return registration.unregister();
       })
       .catch((error) => {
         console.error(error.message);
