@@ -108,7 +108,9 @@ function App() {
   };
 
   useEffect(() => {
-    fetchEvents();
+    fetchEvents().catch((error) => {
+      console.error("Failed to load events:", error);
+    });
   }, []);
 
   const handleChange = (e) => {
